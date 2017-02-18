@@ -1,44 +1,42 @@
 var _ = require('underscore');
 
 var twilio = require('twilio');
-var twilioClient = new twilio.RestClient('AC61336ba077021a0538ecd22749bea275', '7cc20469f61a9ae5b36a3d08494a00cf');
-
-var NodeRSA = require('node-rsa');
-var key = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n'+
-'MIIEowIBAAKCAQEAtawBIyRd20ZIg2AJS8zqV3C3nND/kabRRPlnYUqycBFfbTZU\n'+
-'M517EI59PmjpzaIzj2FhWAFqYS4b0/WYIPFud+DDd/S/2ETegJPFQ4sjiY7/DsS2\n'+
-'o9Grjye0CSc8VQUV09zdYdH557ybngiQow9EWdJgM39NkDiNO2QKNXivAQVpuJeu\n'+
-'oDeKwNGmwDkIsvxBn8u55QpOwvdaRBeLqllJ6xoF6OuwnD0IB4tVDL2MbMVj1U9G\n'+
-'tEGLbMmslVAmtIKEHgB8FpPlo3+fmLE7lufismI3u9tT2HB/Vn4OYNooIWE9uuiy\n'+
-'xm2MAGQ7AuOxIJYUghtKvC68cAy0cKdqJC/9xQIDAQABAoIBAG4s1y+5wVXW5OkP\n'+
-'l/OpXUEUMbZfpW5ujaFX45NEWrzOPGIePahjzBt5Xok31PsJcF13ADMAAMTY0rWT\n'+
-'zuPDp2v6GnEoNCRzd8DgXRSeUDn/R71sHRtyb6nMuUmHyvYAtIEdBAFr9zPL1VBc\n'+
-'/2J0Qs56YC86+A4LzdMD05EkFHX4Db4SuQbGKA2IVFANCgR+qPiFhSLWO7xdbNjf\n'+
-'GgOav3wnO+wdYcVLdIkoj63JDPAepJyAW83oMGNWrwvkd9fqfsFbOc/vkNX/tCjF\n'+
-'TYkJIqocSYiC/cfm9793is3uGoKf78wTWvtpna9DehLZ1EBg/6+59Cnrs8PApVVY\n'+
-'uvVkXkECgYEA3alkGG2/m0MpFpKKYiOyOXKQrrH9smdhj8dbVgMwj7e54NAr9GF2\n'+
-'PrDfIoJkEFyWzBEbMOB42+Q86jJgZc/BwPVpS+IsulnniOXCG3MR7KDwTmR7AuOw\n'+
-'uX2WlpVrDbdpO7sW/locmJecLnOXTnwVTOFd20Im+KBCR5YhcABPb7UCgYEA0dC1\n'+
-'E8GJQ1laqn6CQ8uk3gMnitvkk2008r+X/6jQ49fA1m+ppkzD0x5bmfmnIICesDji\n'+
-'LByUsq3/agfc8NuQ2xgxFwaKSy4TDCouURv0PHKy6RkMlJ6+RJQtGbuYlK4PkQXi\n'+
-'umbjlLn59xH892QhJHpBx9lOsH+acffFlKQff9ECgYApz6vr17fOx6pWcancvTL/\n'+
-'FxcnfLeIEWwbvNUDsnJUialsOJgx7rhpNt/AGKxbUbu4HnnsjEr/31uGKZ55VekM\n'+
-'Rr5n6+/X7uF3ty8YEmqNIgZyIw35C43oT0I6gVDCM5iMBcxeigze06pIMNGXolw6\n'+
-'NkCH/UBwoXofGriP8d8KCQKBgFWvMgPbab8DYq918qTVKYMxLpjarEI4uwLXk69o\n'+
-'tcYWej4YY+PyPZaeMzJybfosDKJS2KrDEUbXIBOhGm2SfVm8S2/nz9pb+pNhNoER\n'+
-'NXDqNn5TKHwZSAKhsLltjyZI3zqOeMU+93npaVepFPHDBnXrJ6oB6MzTj7MzSJEn\n'+
-'ZWXBAoGBAIhBhhEq097jPtnxJASLtVEvadR0/d0Wg0sYYHjIdHUdKw7p1AEgKn7g\n'+
-'Iytgcu1yDdu8nSVBtLbwUCERITddT7jI/GMlyQRLcgL2EQ15VtrE+ghZzG2P0aJU\n'+
-'5jYAlhglbrH/teYExrmWKp+DnRi98BwSCRXBOtlwcSFwGKmQjaCi\n'+
-'-----END RSA PRIVATE KEY-----');
-
-key.setOptions({encryptionScheme: 'pkcs1'});
+var twilioClient = new twilio.RestClient('AC6999b0dc0b56d874b843de86885e2c02', '811be44e4b1725676dc4af6633528bf6');
 
 Parse.Cloud.define('hello', function(req, res) {
     res.success('Hi');
 });
 
-Parse.Cloud.define("sendPushNotificationForIOS", function(request, response) {
+Parse.Cloud.define('login', function(req, res) {
+    res.success('Hi');
+    var params = request.params;
+    var email = params.email;
+    var password = params.password;
+
+    Parse.User.logIn(email, password).then(function(user) {
+
+        guser = user;
+
+        var sessionToken = user.getSessionToken();
+
+        /*sess = req.session,
+            sess.userId = user.id,
+            sess.user = user,
+            sess.phoneNumber = user.get('phoneNumber'),
+            sess.email = email,
+            sess.name = user.get('name'),
+            sess.sessionToken = sessionToken;*/
+
+        res.send({code: 200, message: "Success"});
+
+    }, function(error) {
+        console.log(error);
+        res.send({code: 404, message: "Error"});
+    });
+    
+});
+
+Parse.Cloud.define("sendPushNotificationFor", function(request, response) {
 
     var user = request.user;
     var params = request.params;

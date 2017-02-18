@@ -8,7 +8,6 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 Parse.Cloud.define('login', function(req, res) {
-    res.success('Hi');
     var params = request.params;
     var email = params.email;
     var password = params.password;
@@ -27,13 +26,13 @@ Parse.Cloud.define('login', function(req, res) {
             sess.name = user.get('name'),
             sess.sessionToken = sessionToken;*/
 
-        res.send({code: 200, message: "Success"});
+        res.success({code: 200, message: "Success"});
 
     }, function(error) {
         console.log(error);
-        res.send({code: 404, message: "Error"});
+        res.error({code: 404, message: "Error"});
     });
-    
+
 });
 
 Parse.Cloud.define("sendPushNotificationFor", function(request, response) {

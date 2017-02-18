@@ -5,7 +5,7 @@ var parseServerConfig = require('parse-server-azure-config');
 var _ = require('underscore');
 var url = require('url');
 var validator   = require('express-validator');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var cloudinary  = require('cloudinary');
 var bodyParser  = require('body-parser');
 var moment      = require('moment');
@@ -16,7 +16,7 @@ var clconfig = require('./clconfig');
 
 var app = express();
 app.use('/public', express.static(__dirname + '/public'));
-app.use(favicon(__dirname + '/public/images/SilverlineLogo.png'));
+// app.use(favicon(__dirname + '/public/images/SilverlineLogo.png'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -28,7 +28,7 @@ Parse.serverURL = config.server.serverURL;
 
 // Basic Route
 app.get('/', function(req, res) {
-    res.send('Hello! CoLife Parse Server');
+    res.send('Hello! Ionic Parse Server');
 });
 
 // API ROUTES ------------------

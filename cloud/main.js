@@ -7,7 +7,7 @@ Parse.Cloud.define('hello', function(req, res) {
     res.success('Hi');
 });
 
-Parse.Cloud.define('login', function(req, res) {
+Parse.Cloud.define('login', function(request, response) {
     var params = request.params;
     var email = params.email;
     var password = params.password;
@@ -26,11 +26,11 @@ Parse.Cloud.define('login', function(req, res) {
             sess.name = user.get('name'),
             sess.sessionToken = sessionToken;*/
 
-        res.success({code: 200, message: "Success"});
+        response.success({code: 200, message: "Success"});
 
     }, function(error) {
         console.log(error);
-        res.error({code: 404, message: "Error"});
+        response.error({code: 404, message: "Error"});
     });
 
 });

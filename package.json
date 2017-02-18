@@ -17,7 +17,7 @@
     "parse-dashboard": "^1.0.24",
     "parse-server": "^2.3.3",
     "parse-server-azure-config": "^1.0.0",
-    "serve-favicon": "^2.3.0",
+    "serve-favicon": "^2.3.2",
     "twilio": "^2.11.1",
     "underscore": "^1.8.3"
   },

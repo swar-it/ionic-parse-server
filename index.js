@@ -5,7 +5,7 @@ var parseServerConfig = require('parse-server-azure-config');
 var _ = require('underscore');
 var url = require('url');
 var validator   = require('express-validator');
-// var favicon = require('serve-favicon');
+var favicon = require('serve-favicon');
 var cloudinary  = require('cloudinary');
 var bodyParser  = require('body-parser');
 var moment      = require('moment');
@@ -16,7 +16,7 @@ var clconfig = require('./clconfig');
 
 var app = express();
 app.use('/public', express.static(__dirname + '/public'));
-// app.use(favicon(__dirname + '/public/images/SilverlineLogo.png'));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -86,20 +86,36 @@ apiRoutes.post('/generateCloudinarySignature', function(req, res){
 	}
 });
 
-// test parse query
-apiRoutes.post('/testquery', function(req, res){
-    var username = "fransiscus.angsori@newton-circus.com";
-    var User = Parse.Object.extend("User");
-    var query  = new Parse.Query(User);
-    query.equalTo("username", username);
-    query.first().then(function(usr) {
-        if(usr) {
-        	console.log(usr.id);
-        	res.status(200).send(usr.id);
-        } else {
-        	res.status(404);
-        }
-    })
+app.post('/login',function(req, res) {
+
+    var email = req.body.email || "",
+        password = req.body.password || "",
+        guser;
+
+    console.log(req.body);
+    
+    // sess = req.session;
+
+    Parse.User.logIn(email, password).then(function(user) {
+
+        guser = user;
+
+        var sessionToken = user.getSessionToken();
+
+        /*sess = req.session,
+            sess.userId = user.id,
+            sess.user = user,
+            sess.phoneNumber = user.get('phoneNumber'),
+            sess.email = email,
+            sess.name = user.get('name'),
+            sess.sessionToken = sessionToken;*/
+
+        res.send({code: 200, message: "Success"});
+
+    }, function(error) {
+        console.log(error);
+        res.send({code: 404, message: "Error"});
+    });
 });
 
 // apply the routes to application with the prefix /api

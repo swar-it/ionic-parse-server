@@ -86,36 +86,21 @@ apiRoutes.post('/generateCloudinarySignature', function(req, res){
 	}
 });
 
-app.post('/login',function(req, res) {
-
-    var email = req.body.email || "",
-        password = req.body.password || "",
-        guser;
-
-    console.log(req.body);
-    
-    // sess = req.session;
-
-    Parse.User.logIn(email, password).then(function(user) {
-
-        guser = user;
-
-        var sessionToken = user.getSessionToken();
-
-        /*sess = req.session,
-            sess.userId = user.id,
-            sess.user = user,
-            sess.phoneNumber = user.get('phoneNumber'),
-            sess.email = email,
-            sess.name = user.get('name'),
-            sess.sessionToken = sessionToken;*/
-
-        res.send({code: 200, message: "Success"});
-
-    }, function(error) {
-        console.log(error);
-        res.send({code: 404, message: "Error"});
-    });
+// test parse query
+apiRoutes.post('/testquery', function(req, res){
+    var username = "agarwalswarit@gmail.com";
+    var User = Parse.Object.extend("User");
+    var query  = new Parse.Query(User);
+    query.equalTo("username", username);
+    query.first().then(function(usr) {
+        if(usr) {
+        	console.log(usr.id);
+        	res.status(200).send(usr.id);
+        } else {
+            console.log(error);
+        	res.status(404);
+        }
+    })
 });
 
 // apply the routes to application with the prefix /api
